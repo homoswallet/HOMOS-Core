@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HOMOS Core Chat</title>
+  <style>
+    html, body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: #1f1f1f;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+      flex-shrink: 0;
+    }
+    .logo {
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #00b4ff;
+    }
+    .model-select {
+      background: #2a2a2a;
+      color: #fff;
+      border: none;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+    }
+    main {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+    }
+    .chat-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .message {
+      display: flex;
+      flex-direction: column;
+      max-width: 85%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      line-height: 1.5;
+      font-size: 1rem;
+      position: relative;
+      word-wrap: break-word;
+    }
+    .user {
+      align-self: flex-end;
+      background: #007aff;
+      border-bottom-right-radius: 5px;
+    }
+    .bot {
+      align-self: flex-start;
+      background: #2a2a2a;
+      border-bottom-left-radius: 5px;
+    }
+    .bot::after {
+      content: 'HOMOS Core';
+      font-size: 0.75rem;
+      color: #888;
+      margin-top: 4px;
+      align-self: flex-end;
+    }
+    footer {
+      display: flex;
+      padding: 10px;
+      background: #1f1f1f;
+      align-items: center;
+      width: 100%;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.4);
+      flex-shrink: 0;
+      position: relative;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 25px;
+      margin-right: 10px;
+      font-size: 1rem;
+      background: #2a2a2a;
+      color: #fff;
+    }
+    button {
+      background: rgba(0,122,255,0.2);
+      border: none;
+      color: #fff;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease, opacity 0.3s ease;
+      opacity: 0.5;
+    }
+    button.active {
+      background: #007aff;
+      opacity: 1;
+    }
+    .tip-box {
+      font-size: 0.85rem;
+      background: #1e1e1e;
+      color: #aaa;
+      padding: 8px 12px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      align-self: center;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">🤖 HOMOS Core</div>
+    <select class="model-select">
+      <option>HOMOS V1</option>
+    </select>
+  </header>
+  <main>
+    <div class="chat-box" id="chat"></div>
+  </main>
+  <footer>
+    <input type="text" id="input" placeholder="اكتب سؤالك هنا..." oninput="toggleButton()" />
+    <button id="sendBtn" onclick="sendMessage()">➤</button>
+  </footer>
+
+  <script>
+    const chatBox = document.getElementById('chat');
+    const input = document.getElementById('input');
+    const sendBtn = document.getElementById('sendBtn');
+
+    function sendMessage() {
+      const userMessage = input.value.trim();
+      if (!userMessage) return;
+
+      appendMessage(userMessage, 'user');
+      input.value = '';
+      toggleButton();
+
+      setTimeout(() => {
+        const botReply = "مرحباً! أنا HOMOS Core. كيف يمكنني مساعدتك اليوم؟";
+        appendMessage(botReply, 'bot');
+        showTip();
+      }, 800);
+    }
+
+    function appendMessage(message, sender) {
+      const div = document.createElement('div');
+      div.className = `message ${sender}`;
+      div.innerText = message;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight; // ✅ Scroll to latest
+    }
+
+    function showTip() {
+      const tip = document.createElement('div');
+      tip.className = 'tip-box';
+      tip.innerText = '💡 نصيحة: يمكنك كتابة "مساعدة" لرؤية قدراتي.';
+      chatBox.appendChild(tip);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function toggleButton() {
+      if (input.value.trim()) {
+        sendBtn.classList.add('active');
+      } else {
+        sendBtn.classList.remove('active');
+      }
+    }
+  </script>
+</body>
+</html>
