@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HOMOS Core Chat</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+    }
+    header {
+      background: #1f1f1f;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+    }
+    .logo {
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #00b4ff;
+    }
+    .model-select {
+      background: #2a2a2a;
+      color: #fff;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+    }
+    main {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+    }
+    footer {
+      display: flex;
+      padding: 10px;
+      background: #1f1f1f;
+      align-items: center;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 12px;
+      border-radius: 25px;
+      background: #2a2a2a;
+      border: none;
+      color: #fff;
+      font-size: 1rem;
+      margin-right: 10px;
+    }
+    button {
+      background: rgba(0,122,255,0.3);
+      border: none;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: rgba(0,122,255,0.5);
+    }
+    .message {
+      padding: 12px 16px;
+      border-radius: 18px;
+      max-width: 80%;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      word-wrap: break-word;
+    }
+    .user { background: #007aff; align-self: flex-end; }
+    .bot { background: #2a2a2a; align-self: flex-start; }
+    .bot::after {
+      content: "HOMOS Core";
+      display: block;
+      font-size: 0.75rem;
+      color: #aaa;
+      margin-top: 4px;
+    }
+
+    /* النافذة المنبثقة */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .popup {
+      background: #1e1e1e;
+      padding: 25px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+      position: relative;
+    }
+    .popup h2 {
+      margin-top: 0;
+      color: #00b4ff;
+    }
+    .popup button.close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: none;
+      color: #fff;
+      font-size: 1.5rem;
+      border: none;
+      cursor: pointer;
+    }
+    .popup a {
+      color: #00b4ff;
+      text-decoration: underline;
+      cursor: pointer;
+      display: block;
+      margin: 10px 0;
+    }
+    .start-btn {
+      margin-top: 20px;
+      background: #007aff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      border-radius: 30px;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <!-- واجهة الشروط -->
+  <div class="overlay" id="termsScreen">
+    <div class="popup">
+      <h2>مرحبا بك في HOMOS Core</h2>
+      <p>قبل أن تبدأ، يرجى قراءة شروط الاستخدام وسياسة الخصوصية.</p>
+      <a onclick="showPopup('terms')">📜 شروط الاستخدام</a>
+      <a onclick="showPopup('privacy')">🔐 سياسة الخصوصية</a>
+      <button class="start-btn" onclick="startChat()">ابدأ الآن</button>
+    </div>
+  </div>
+
+  <!-- النوافذ المنبثقة -->
+  <div class="overlay hidden" id="popupTerms">
+    <div class="popup">
+      <button class="close" onclick="closePopup()">×</button>
+      <h2>شروط الاستخدام</h2>
+      <p>باستخدام HOMOS Core، فإنك توافق على عدم استخدام الخدمة في أي أنشطة مخالفة للقانون، وتقر بأن المعلومات المقدمة لا تعتبر بديلاً عن الاستشارة الاحترافية.</p>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="popupPrivacy">
+    <div class="popup">
+      <button class="close" onclick="closePopup()">×</button>
+      <h2>سياسة الخصوصية</h2>
+      <p>لا نقوم بتخزين بياناتك الشخصية أو مشاركتها مع جهات خارجية. خصوصيتك مهمة بالنسبة لنا ونحرص على حماية بياناتك بأفضل الطرق الممكنة.</p>
+    </div>
+  </div>
+
+  <!-- واجهة HOMOS Core -->
+  <header>
+    <div class="logo">🤖 HOMOS Core</div>
+    <select class="model-select"><option>HOMOS V1</option></select>
+  </header>
+
+  <main id="chatMain" class="hidden">
+    <div class="message bot">👋 أهلاً بك! أنا HOMOS Core، مساعدك الذكي. كيف يمكنني مساعدتك اليوم؟</div>
+    <div id="chatBox"></div>
+  </main>
+
+  <footer id="chatFooter" class="hidden">
+    <input type="text" id="input" placeholder="اكتب سؤالك هنا..." />
+    <button onclick="sendMessage()">➤</button>
+  </footer>
+
+  <script>
+    function startChat() {
+      document.getElementById('termsScreen').style.display = 'none';
+      document.getElementById('chatMain').classList.remove('hidden');
+      document.getElementById('chatFooter').classList.remove('hidden');
+    }
+
+    function showPopup(type) {
+      document.getElementById(type === 'terms' ? 'popupTerms' : 'popupPrivacy').classList.remove('hidden');
+    }
+
+    function closePopup() {
+      document.getElementById('popupTerms').classList.add('hidden');
+      document.getElementById('popupPrivacy').classList.add('hidden');
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('input');
+      const chatBox = document.getElementById('chatBox');
+      const message = input.value.trim();
+      if (!message) return;
+      const userDiv = document.createElement('div');
+      userDiv.className = 'message user';
+      userDiv.textContent = message;
+      chatBox.appendChild(userDiv);
+      input.value = '';
+
+      setTimeout(() => {
+        const botDiv = document.createElement('div');
+        botDiv.className = 'message bot';
+        botDiv.textContent = "🤖 هذا رد افتراضي من HOMOS Core.";
+        chatBox.appendChild(botDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 600);
+    }
+  </script>
+</body>
+</html>
