@@ -3,192 +3,162 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HOMOS Core Chat</title>
+  <title>HOMOS Core - البداية</title>
   <style>
-    html, body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #121212;
-      color: #fff;
+    body {
       margin: 0;
       padding: 0;
-      height: 100dvh;
-      display: flex;
-      flex-direction: column;
-    }
-    header {
-      background: #1f1f1f;
-      padding: 15px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-      flex-shrink: 0;
-    }
-    .logo {
-      font-size: 1.6rem;
-      font-weight: bold;
-      color: #00b4ff;
-    }
-    .model-select {
-      background: #2a2a2a;
+      background: #0d0d0d;
+      font-family: 'Segoe UI', sans-serif;
       color: #fff;
-      border: none;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-    }
-    main {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      position: relative;
-    }
-    .chat-box {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-    .message {
-      display: flex;
-      flex-direction: column;
-      max-width: 85%;
-      padding: 12px 16px;
-      border-radius: 18px;
-      line-height: 1.5;
-      font-size: 1rem;
-      position: relative;
-      word-wrap: break-word;
-    }
-    .user {
-      align-self: flex-end;
-      background: #007aff;
-      border-bottom-right-radius: 5px;
-    }
-    .bot {
-      align-self: flex-start;
-      background: #2a2a2a;
-      border-bottom-left-radius: 5px;
-    }
-    .bot::after {
-      content: 'HOMOS Core';
-      font-size: 0.75rem;
-      color: #888;
-      margin-top: 4px;
-      align-self: flex-end;
-    }
-    footer {
-      display: flex;
-      padding: 10px;
-      background: #1f1f1f;
-      align-items: center;
-      width: 100%;
-      box-shadow: 0 -2px 5px rgba(0,0,0,0.4);
-      flex-shrink: 0;
-      position: relative;
-    }
-    input[type="text"] {
-      flex: 1;
-      padding: 14px;
-      border: none;
-      border-radius: 25px;
-      margin-right: 10px;
-      font-size: 1rem;
-      background: #2a2a2a;
-      color: #fff;
-    }
-    button {
-      background: rgba(0,122,255,0.2);
-      border: none;
-      color: #fff;
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.3rem;
-      display: flex;
+      min-height: 100dvh;
       align-items: center;
       justify-content: center;
-      transition: background 0.3s ease, opacity 0.3s ease;
-      opacity: 0.5;
-    }
-    button.active {
-      background: #007aff;
-      opacity: 1;
-    }
-    .tip-box {
-      font-size: 0.85rem;
-      background: #1e1e1e;
-      color: #aaa;
-      padding: 8px 12px;
-      border-radius: 12px;
-      margin-bottom: 10px;
-      align-self: center;
       text-align: center;
+    }
+    h1 {
+      color: #00b4ff;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    p {
+      color: #ccc;
+      max-width: 90%;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+    }
+    .buttons {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    button {
+      background: #1f1f1f;
+      color: #00b4ff;
+      border: 1px solid #00b4ff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      background: #00b4ff;
+      color: #fff;
+    }
+    .start {
+      margin-top: 30px;
+      background: #007aff;
+      color: white;
+      border: none;
+      font-weight: bold;
+    }
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #1e1e1e;
+      padding: 25px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 80dvh;
+      overflow-y: auto;
+      display: none;
+      z-index: 999;
+    }
+    .popup h2 {
+      color: #00b4ff;
+      margin-top: 0;
+    }
+    .popup p {
+      text-align: justify;
+      font-size: 0.95rem;
+      color: #ccc;
+    }
+    .close {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      z-index: 998;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">🤖 HOMOS Core</div>
-    <select class="model-select">
-      <option>HOMOS V1</option>
-    </select>
-  </header>
-  <main>
-    <div class="chat-box" id="chat"></div>
-  </main>
-  <footer>
-    <input type="text" id="input" placeholder="اكتب سؤالك هنا..." oninput="toggleButton()" />
-    <button id="sendBtn" onclick="sendMessage()">➤</button>
-  </footer>
+
+  <h1>مرحباً بك في HOMOS Core</h1>
+  <p>
+    باستخدام HOMOS Core، أنت توافق على الشروط والسياسات. نعدك بالحفاظ على خصوصيتك وتقديم أفضل تجربة ذكاء اصطناعي من تطوير HOMOS.
+  </p>
+
+  <div class="buttons">
+    <button onclick="openPopup('privacy')">سياسة الخصوصية</button>
+    <button onclick="openPopup('terms')">شروط الاستخدام</button>
+  </div>
+
+  <button class="start" onclick="startChat()">ابدأ الآن 🚀</button>
+
+  <!-- النوافذ المنبثقة -->
+  <div class="overlay" id="overlay" onclick="closePopup()"></div>
+
+  <div class="popup" id="privacyPopup">
+    <button class="close" onclick="closePopup()">×</button>
+    <h2>سياسة الخصوصية</h2>
+    <p>
+      نحن نحترم خصوصيتك. لا نقوم بجمع أو مشاركة بياناتك مع أي طرف خارجي. يتم استخدام البيانات المدخلة لتحسين تجربتك فقط داخل HOMOS Core.
+      لا يتم الاحتفاظ بأي معلومات شخصية أو محادثات على الخوادم. استخدامك للخدمة يعتبر موافقة منك على هذه السياسة.
+    </p>
+  </div>
+
+  <div class="popup" id="termsPopup">
+    <button class="close" onclick="closePopup()">×</button>
+    <h2>شروط الاستخدام</h2>
+    <p>
+      يُحظر استخدام HOMOS Core في أي أنشطة ضارة، مثل نشر الكراهية، أو طلب محتوى غير لائق أو مخالف للقانون.
+      يُمنع إعادة استخدام النموذج أو بيعه بدون إذن رسمي من المطور. HOMOS Core يُستخدم لأغراض تعليمية ومساعدة المستخدمين فقط.
+      يُحتفظ بحق المطور في تعديل الشروط في أي وقت.
+    </p>
+  </div>
 
   <script>
-    const chatBox = document.getElementById('chat');
-    const input = document.getElementById('input');
-    const sendBtn = document.getElementById('sendBtn');
-
-    function sendMessage() {
-      const userMessage = input.value.trim();
-      if (!userMessage) return;
-
-      appendMessage(userMessage, 'user');
-      input.value = '';
-      toggleButton();
-
-      setTimeout(() => {
-        const botReply = "مرحباً! أنا HOMOS Core. كيف يمكنني مساعدتك اليوم؟";
-        appendMessage(botReply, 'bot');
-        showTip();
-      }, 800);
-    }
-
-    function appendMessage(message, sender) {
-      const div = document.createElement('div');
-      div.className = `message ${sender}`;
-      div.innerText = message;
-      chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight; // ✅ Scroll to latest
-    }
-
-    function showTip() {
-      const tip = document.createElement('div');
-      tip.className = 'tip-box';
-      tip.innerText = '💡 نصيحة: يمكنك كتابة "مساعدة" لرؤية قدراتي.';
-      chatBox.appendChild(tip);
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function toggleButton() {
-      if (input.value.trim()) {
-        sendBtn.classList.add('active');
-      } else {
-        sendBtn.classList.remove('active');
+    function openPopup(type) {
+      document.getElementById('overlay').style.display = 'block';
+      if (type === 'privacy') {
+        document.getElementById('privacyPopup').style.display = 'block';
+      } else if (type === 'terms') {
+        document.getElementById('termsPopup').style.display = 'block';
       }
     }
+
+    function closePopup() {
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById('privacyPopup').style.display = 'none';
+      document.getElementById('termsPopup').style.display = 'none';
+    }
+
+    function startChat() {
+      // استبدل هذا الرابط لاحقًا بصفحة الدردشة الخاصة بك
+      window.location.href = "chat.html";
+    }
   </script>
+
 </body>
 </html>
